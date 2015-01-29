@@ -1,2 +1,2 @@
 wc -l permits.csv
-grep "Hyde Park" permits.csv > permits_hydepark.csv
+grep "HYDE\sPARK" permits.csv > permits_hydepark.csv
