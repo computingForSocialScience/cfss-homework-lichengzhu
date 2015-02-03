@@ -1,6 +1,5 @@
-#%matplotlib inline
-import matplotlib as plt
-from matplotlib.pyplot import plot, hist
+import matplotlib.pyplot as plt
+#import numpy as np  
 import csv
 import sys
 
@@ -35,14 +34,21 @@ def zip_code_barchat(filename):
 	lines = readCSV(filename)
 	zipcodes = []
 	for i in lines:
-		thiszipcode = i[27]
+		thiszipcode = i[28]
+		if not thiszipcode.startswith("6"): continue  #getting all zipcodes starting with "6"
 		zipcodes.append(int(thiszipcode[:5]))
-	zip_graph = hist(zipcodes)
-	zip_graph.show()
+	
+	plt.hist(zipcodes)   # making a histogram of the data
+	
+	plt.xlabel("Zip Codes")  # marking label for x-axis
+	plt.ylabel("Frequency")  # marking label for y-axis
+	plt.title("Frequency Distribution of Zip Codes") # marking the title of the bar chart
+	
+	plt.show() # print the plot
 	
 
 
 if __name__ == '__main__':
 	#print "we're in main, here"
 	get_avg_latlng("permits_hydepark.csv")
-	zip_code_barchat
+	zip_code_barchat("permits_hydepark.csv")
