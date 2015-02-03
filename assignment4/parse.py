@@ -1,7 +1,8 @@
 #%matplotlib inline
+import matplotlib as plt
+from matplotlib.pyplot import plot, hist
 import csv
 import sys
-from pylab import *
 
 def readCSV(filename):
 
@@ -30,7 +31,18 @@ def get_avg_latlng(filename):
 	print("average latitude: ", avg_lag, "average longitude: ", avg_lng)
 
 
+def zip_code_barchat(filename):
+	lines = readCSV(filename)
+	zipcodes = []
+	for i in lines:
+		thiszipcode = i[27]
+		zipcodes.append(int(thiszipcode[:5]))
+	zip_graph = hist(zipcodes)
+	zip_graph.show()
+	
+
 
 if __name__ == '__main__':
 	#print "we're in main, here"
 	get_avg_latlng("permits_hydepark.csv")
+	zip_code_barchat
