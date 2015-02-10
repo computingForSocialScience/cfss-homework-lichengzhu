@@ -1,15 +1,62 @@
 import requests
 from datetime import datetime
+#from bs4 import BeautifulSoup
 
+# example artist_id: 13saZpZnCDWOI9D4IJhp1f
 def fetchAlbumIds(artist_id):
-    """Using the Spotify API, take an artist ID and 
-    returns a list of album IDs in a list
-    """
-    pass
+    url = "https://api.spotify.com/v1/artists/" + artist_id + "/albums?market=US&album_type=album"
+    info = requests.get(url)
+    info = info.json()
+    info = info['items']
+
+    album_id_list = []
+    for i in info:
+    	album_id_list.append(i['id'])
+    #print(album_id_list)
+    return(album_id_list)
 
 def fetchAlbumInfo(album_id):
-    """Using the Spotify API, take an album ID 
-    and return a dictionary with keys 'artist_id', 'album_id' 'name', 'year', popularity'
-    """
-    pass
+    url = "https://api.spotify.com/v1/albums/" + album_id
+    req = requests.get(url)
+    req = req.json()
+    artist_id = req['artists'][0]['id']
 
+    artist_id_list = fetchAlbumIds(artist_id)
+
+    album_date_list = []
+    album_id_associated_list = []
+    album_pop_list = []
+    album_name_list = []
+    album_info_dict = {}
+
+    for i in artist_id_list:
+    	url = "https://api.spotify.com/v1/albums/" + i
+    	req2 = requests.get(url)
+    	req2 = req2.json()
+
+    	release_date = req2['release_date'] #finding the year
+    	release_date_year = release_date[:4]
+    	album_date_list.append(release_date_year)
+
+    	album_id_associated = req2['id']   #finding the album id
+    	album_id_associated_list.append(album_id_associated)
+
+    	album_pop = req2['popularity']  #finding the popularity
+    	album_pop_list.append(album_pop)
+
+    	album_name = req2['name']
+    	album_name_list.append(album_name)
+
+    album_info_dict['artist_id'] = artist_id 
+    album_info_dict['album_id'] = album_id_associated_list
+    album_info_dict['name'] = album_name_list
+    album_info_dict['year'] = album_date_list
+    album_info_dict['popularity'] = album_pop_list
+
+
+    print(album_info_dict)
+
+
+
+#fetchAlbumIds('13saZpZnCDWOI9D4IJhp1f')
+#fetchAlbumInfo('5Swr80WlTTC0PKExtoU4jU')
