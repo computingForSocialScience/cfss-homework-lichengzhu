@@ -9,24 +9,24 @@ def fetchArtistId(name):
     and return a Spotify artist ID.
     """
 	
-	name = name.replace('', '%20') # getting rid of spaces
+	#underline_name = name.replace('', '%20') # getting rid of spaces
 	
 	url= "https://api.spotify.com/v1/search?q=" + name + "&type=artist" #forming a readable URL
+	print(url)
 	
 	req = requests.get(url)
 	assert req.ok, 'No record found.'
 	
 	dict = req.json()
-	assert dict.get('artists').get('items'), 'Artists not found.'
 	
-	id = dict['artists']['items'][0]['uri'] # can also index 'id'
-	id = id.split(':')[2]
+	id = dict['artists']['items'][0]['id'] # can also index 'uri'
+
 	
 	#print(id)
 	return(id)
 	
 
-# example id: 0IEXBEvkiRDvASHhB1va4z
+# example id: 13saZpZnCDWOI9D4IJhp1f
 def fetchArtistInfo(artist_id):
     url = "https://api.spotify.com/v1/artists/" + artist_id
     
@@ -52,5 +52,5 @@ def fetchArtistInfo(artist_id):
     
 
 
-#fetchArtist(sys.argv[1])
-#fetchArtistInfo(sys.argv[1])
+#fetchArtistId('Lily Allen')
+#fetchArtistInfo('13saZpZnCDWOI9D4IJhp1f')
