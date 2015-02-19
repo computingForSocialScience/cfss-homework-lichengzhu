@@ -70,6 +70,6 @@ def getEdgeList(artistID, depth):
 
 def writeEdgeList(artistID, depth, filename):
 	data = getEdgeList(artistID, depth)
-	data.to_csv(filename, index = False)
+	data.to_csv(filename, index = False, header = ['artist', 'related_artist'])
 
-writeEdgeList('2mAFHYBasVVtMekMUkRO9g', 2, 'out.csv')
+#writeEdgeList('2mAFHYBasVVtMekMUkRO9g', 2, 'out.csv')

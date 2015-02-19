@@ -16,10 +16,11 @@ def readEdgeList(filename):
 #readEdgeList(filename)
 
 def degree(edgeList, in_or_out):
-	if in_or_out == 'in':
-		df = pd.DataFrame(edgeList['Artist'].value_counts())
-	elif in_or_out == 'out':
-		df = pd.DataFrame(edgeList['Related_Artist'].value_counts())
+	#print len(edgeList)
+	if in_or_out == 'out':
+		df = edgeList['artist'].value_counts()
+	elif in_or_out == 'in':
+		df = edgeList['related_artist'].value_counts()
 	else:
 		print "you have to tell it in or out, stupid"
 	return df
@@ -29,17 +30,17 @@ def degree(edgeList, in_or_out):
 #edgeList = readEdgeList(filename)
 #print degree(edgeList, in_or_out)
 
-def combineEdgelists(edgeList1, edgeList2):
+def combineEdgeLists(edgeList1, edgeList2):
 	pieces = [edgeList1, edgeList2]
 	concatenated = pd.concat(pieces)
 	combined = concatenated.drop_duplicates()
 	#combined = DataFrame.drop_duplicates(concatenated)
 	return combined
 
-def pandastoNetworkX(edgeList): 
+def pandasToNetworkX(edgeList): 
 	g = nx.DiGraph()
-	for Artist, Related_Artist in edgeList.to_records(index=False):
-		g.add_edge(Artist, Related_Artist)
+	for artist, related_artist in edgeList.to_records(index=False):
+		g.add_edge(artist, related_artist)
 	return g
 
 """def randomCentralNode(inputDiGraph):
