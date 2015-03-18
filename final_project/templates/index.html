@@ -1,0 +1,64 @@
+
+<!doctype html>
+<html>
+<head>
+<title>Networded Chinese Environmental NGOs</title>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+
+<form action="/comparasion" method="get">
+
+    <div>
+        <label for="Network1">Column 1:</label>
+        <select id="Network1" name='Network1'>
+        
+            <option value="collaboration">collaboration</option>
+        
+            <option value="information">information</option>
+        
+            <option value="support">support</option>
+
+            <option value="financial_aid">financial_aid</option>
+          
+        </select>
+    </div>
+
+    <div>
+        <label for="Network2">Column 2:</label>
+        <select id="Network2" name='Network2'>
+        
+            <option value="collaboration">collaboration</option>
+        
+            <option value="information">information</option>
+        
+            <option value="support">support</option>
+
+            <option value="financial_aid">financial_aid</option>
+          
+        </select>
+    </div>
+
+    <div>
+        <label for='CompareBy'>Compare By:</label>
+        <select id='CompareBy' name='CompareBy'>
+        
+            <option value="none">none</option>
+        
+            <option value="closeness">closeness</option>
+        
+            <option value="betweenness">betweenness</option>
+        
+        </select>
+    </div>
+
+    <div class="button">
+        <button type="submit">Compare</button>
+    </div>
+
+</form>
+</div>
+</body>
+</html>

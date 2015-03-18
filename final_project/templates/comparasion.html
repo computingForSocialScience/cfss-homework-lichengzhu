@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+<title>Comparasion</title>
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+
+<title>Network 1</title>
+<h1>{{network1}} network</h1>
+	<img src="{{ url_for('static', filename= filename1)}}">
+
+<title>Network 2</title>
+<h1>{{network2}} network</h1>
+	<img src="{{ url_for('static', filename= filename2)}}">
+
+<hr>
+
+<h1>Metric for {{network1}}</h1>
+<div class="rawData">
+    <p>
+        {% for i in y %}
+            {{ i }},
+		{% endfor %}
+	</p> 
+</div>
+
+{{myvarname1}}
+
+<h1>Metric for {{network2}}</h1>
+{{myvarname2}}
+
+
+
+</form>
+</div>
+</body>
+</html>
