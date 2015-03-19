@@ -51,8 +51,7 @@ def analyzenetwork(networkname, metric):
 		filename = "static/pics/" + str(networkname) + "_" + str(metric) + '.png'
 		plt.savefig(filename)
 
-		return('betweenness is:', betweenness)
-		return('closeness is:', betweenness)
+		return(betweenness, closeness)
 
 	elif str(metric) == "closeness": # node size adjusted according to closeness
 		# calculating related metrics
