@@ -17,42 +17,23 @@ def analyzenetwork(networkname, metric):
 	db = pymysql.connect(host='localhost', user='root', passwd='hawkinszlc', db='Final')
 	c = db.cursor()
 
-	edgeList = []
-	g = nx.DiGraph() 
-
-	query = """SELECT * FROM network WHERE layer = '%s'""" % networkbriefname
+	query = """SELECT * FROM network WHERE layer = '%s'""" % networkbriefname #get selected network (contrained by the "layer" name) from the databate
 	c.execute(query)
 	data = c.fetchall()
+	#print data
 
-	# checking if the retrived data is empty or not. If yes, write it to the database; if no, then add the retrived data to the edgeList
-	if len(data) == 0:
-	 	write_to_database(networkname)   # wrte the data to the database first
-	 	query = """SELECT * FROM network WHERE layer = '%s'""" % networkbriefname
-	 	c.execute(query)
-	 	data = c.fetchall()
+	# adding data to graph "g"
+	g = nx.DiGraph() 
+	g.clear()
+	for i in data:
+		sender = i[0]
+	 	receiver = i[1]
+	 	g.add_edge(sender, receiver)
+	 	#print(sender, receiver, networkbriefname)
+	#print(networkname, " has:", g.nodes())
 
-	 	for i in data:
-	 		sender = i[0]
-	 		receiver = i[1]
-	 		weight = i [2]
-	 		g.add_edge(sender, receiver, count = weight)
-	else:
-	 	for i in data:
-	 		sender = i[0]
-	 		receiver = i[1]
-	 		weight = i [2]
-	 		g.add_edge(sender, receiver, count = weight)
-
-
-	# related metrics
-	#density = nx.density(g)
-	#degree = nx.degree(g)
-	#in_degree = g.in_degree(g)
-	#out_degree = g.out_degree(g)
-	betweenness = nx.betweenness_centrality(g)
-	closeness = nx.closeness_centrality(g)
-
-	static = 'static'  # creating the directory
+	# creating the directory if does not exist
+	static = 'static/pics/'
 	if not os.path.exists(static):
 		os.makedirs(static)
 
@@ -60,32 +41,44 @@ def analyzenetwork(networkname, metric):
 	# draw the network with matplotlib by closeness or betweeness; alternatively one can choose to draw and compare regular networks
 	if str(metric) == "none": # drawing regular networks
 
-		lyt = nx.layout.spring_layout(g) # making sure the node positions are the same
-		nx.draw(g, pos=lyt, with_labels=True, node_color='blue', font_size=9)
+		# calculating related metrics
+		betweenness = nx.betweenness_centrality(g)
+		closeness = nx.closeness_centrality(g)
 
-		filename = "static/" + str(networkname) + "_" + str(metric) + '.png'
+		#lyt = nx.layout.spring_layout(g) # making sure the node positions are the same
+		nx.draw(g, with_labels=True, node_color='blue', font_size=9)
+
+		filename = "static/pics/" + str(networkname) + "_" + str(metric) + '.png'
 		plt.savefig(filename)
 
-		return(betweenness, closeness)
+		return('betweenness is:', betweenness)
+		return('closeness is:', betweenness)
 
-	if str(metric) == "closeness": # node size adjusted according to betweenness
+	elif str(metric) == "closeness": # node size adjusted according to closeness
+		# calculating related metrics
+		closeness = nx.closeness_centrality(g)
+
 		d = closeness
-		lyt = nx.layout.spring_layout(g) # making sure the node positions are the same
-		nx.draw(g, pos=lyt, with_labels=True, node_color='blue', nodelist=d.keys(), node_size=[v * 1000 for v in d.values()], font_size=9)
+		#lyt = nx.layout.spring_layout(g) # making sure the node positions are the same
+		nx.draw(g, with_labels=True, node_color='blue', nodelist=d.keys(), node_size=[v * 500 for v in d.values()], font_size=9)
 
-		filename = "static/" + str(networkname) + "_" + str(metric) + '.png'
+		filename = "static/pics/" + str(networkname) + "_" + str(metric) + '.png'
 		plt.savefig(filename)
+
 
 		return(closeness)
 
-	if str(metric) == "betweenness": # node size adjusted according to betweenness
-		d = betweenness
-		lyt = nx.layout.spring_layout(g) # making sure the node positions are the same
-		nx.draw(g, pos=lyt, with_labels=True, node_color='blue', nodelist=d.keys(), node_size=[v * 10000 for v in d.values()], font_size=9)
+	elif str(metric) == "betweenness": # node size adjusted according to betweenness
+		# calculating related metrics
+		betweenness = nx.closeness_centrality(g)
 
-		filename = "static/" + str(networkname) + "_" + str(metric) + '.png'
+		z = betweenness
+		#lyt = nx.layout.spring_layout(g) # making sure the node positions are the same
+		nx.draw(g, with_labels=True, node_color='blue', nodelist=z.keys(), node_size=[v * 2000 for v in z.values()], font_size=9)
+
+		filename = "static/pics/" + str(networkname) + "_" + str(metric) + '.png'
 		plt.savefig(filename)
-
+	
 		return(betweenness)
 
 

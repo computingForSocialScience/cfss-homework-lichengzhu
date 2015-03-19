@@ -5,6 +5,7 @@ import sys
 import os
 
 def write_to_database(networkname):
+	"""this function convert local data (in .txt) to .csv files (by calling "converttxt" function) and feed them to the local database"""
 
 	networkname = str(networkname)
 	converttxt(str(networkname))

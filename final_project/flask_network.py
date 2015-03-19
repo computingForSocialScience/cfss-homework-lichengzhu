@@ -1,15 +1,33 @@
 from flask import Flask, render_template, request
 import pymysql
 from analyze_network import analyzenetwork
+from database_network import write_to_database
 
 
 app = Flask(__name__)
 
-# # connecting to the local database
-# conn = pymysql.connect(host='localhost', user='root', passwd='hawkinszlc', db='Final',charset='utf8')
-# cur = conn.cursor()
+# checking if the table "network" exists in the database. If yes, drop it and create a table with same name. If no, create a table.
+# this step is to make sure data will not be fed to local database twice.
+db = pymysql.connect(host='localhost', user='root', passwd='hawkinszlc', db='Final')
+c = db.cursor()
+try:
+	c.execute("DROP TABLE IF EXISTS network")
+	c.execute("CREATE TABLE network (source INT (3), target INT (3), weight INT (1), layer VARCHAR (3)) ENGINE = MyISAM DEFAULT CHARSET=utf8;")
+except:
+	c.execute("CREATE TABLE network (source INT (3), target INT (3), weight INT (1), layer VARCHAR (3)) ENGINE = MyISAM DEFAULT CHARSET=utf8;")
+db.commit()
+c.close()
 
 
+
+#adding all the data to the database by calling "write_to_database" function
+write_to_database('information')
+write_to_database('support')
+write_to_database('collaboration')
+write_to_database('financial_aid')
+
+
+# the application
 @app.route('/')
 def index():
 	
@@ -21,60 +39,23 @@ def comparasion():
 
 	network1 = request.args.get('Network1')
 	network2 = request.args.get('Network2')
-	#print(network1)
 	metric = request.args.get('CompareBy')
+	#print('***************************', network1, network2, metric)
 
-	# calling the "analyzenetwork" function to do the calculation and the drawing
-	analyzenetwork(network1, metric)
-	analyzenetwork(network2, metric)
-
-	# show the data
+	# showing and calculating the data
 	result1 = analyzenetwork(network1, metric)
-	#print("hahahahahahahahahahaha", result1)
-	# resultlist1 = []
-	# for k, v in result1.iteritems():
-	# 	item1 = str(k) + " :" + str(v)
-	# 	resultlist1.append(item1)
-
 	result2 = analyzenetwork(network2, metric)
-	# resultlist2 = []
-	# for k, v in result2.iteritems():
-	# 	item2 = str(k) + " :" + str(v)
-	# 	resultlist2.append(item2)
-
-	#print(result1)
 
 
-	# composing the file name
+	# composing the file name, inorder to insert in html
 	filename1 = str(network1) + "_" + str(metric) + ".png"
 	filename2 = str(network2) + "_" + str(metric) + ".png"
+	# filepath1 = "'/" + filename1 + "'"
+	# filepath2 = "'/" + filename2 + "'"
+	# print(filepath1, filepath2)
 
 
-	return render_template('comparasion.html', myvarname1 = result1, myvarname2 = result2, filename1 = filename1, filename2 = filename2, network1 = network1, network2 = network2)
-
-
-
-if __name__ == '__main__':
-	app.debug = True
-	app.run()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	return render_template('comparasion.html', metric = metric, myvarname1 = result1, myvarname2 = result2, filenameone = filename1, filenametwo = filename2, network1 = network1, network2 = network2)
 
 
 if __name__ == '__main__':
